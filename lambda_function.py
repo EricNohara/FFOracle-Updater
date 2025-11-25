@@ -7,6 +7,12 @@ def call_put(path):
     req = urllib.request.Request(url, method="PUT")
     with urllib.request.urlopen(req) as res:
         return res.status
+    
+def call_post(path):
+    url = f"{BASE_URL}{path}"
+    req = urllib.request.Request(url, method="POST")
+    with urllib.request.urlopen(req) as res:
+        return res.status
 
 
 def lambda_handler(event, context):
@@ -24,6 +30,10 @@ def lambda_handler(event, context):
         elif task == "increment":
             status = call_put("/AppState/increment")
             return {"statusCode": status, "body": "AppState increment OK"}
+        
+        elif task == "email-articles":
+            status = call_post("/Espn/emailArticles")
+            return {"statusCode": status, "body": "Email article sending OK"}
 
         else:
             return {"statusCode": 400, "body": f"Unknown task: {task}"}
